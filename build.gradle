@@ -1,0 +1,52 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+
+project.group = 'ch.cbossi'
+version = '1.0'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Comeda',
+                   'Implementation-Version': version
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.auto.service:auto-service:1.0-rc2'
+    compile 'org.springframework:spring-web:4.2.5.RELEASE'
+    compile 'com.squareup:javapoet:1.7.0'
+    
+    testCompile 'junit:junit:4.12'
+    
+}
+
+/*
+ * ./gradlew publish
+ * 
+ * Publishing maven artifacts into the build folder instead of the local maven repository:
+ * https://docs.gradle.org/current/userguide/publishing_maven.html
+ * (Chpaters '34.3. Repositories' and '34.4. Performing a publish')
+ */
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "$buildDir/repo"
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
+}
