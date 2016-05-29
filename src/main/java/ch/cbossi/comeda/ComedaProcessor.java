@@ -2,6 +2,7 @@ package ch.cbossi.comeda;
 
 import static ch.cbossi.comeda.Strings.capitalize;
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static com.squareup.javapoet.TypeSpec.classBuilder;
 import static java.lang.String.format;
@@ -122,9 +123,8 @@ public class ComedaProcessor extends AbstractProcessor {
 
       String className = controllerClass.getSimpleName() + URLS;
 
-      MethodSpec constructor = methodBuilder(className)
+      MethodSpec constructor = constructorBuilder()
           .addModifiers(PRIVATE)
-          .returns(void.class)
           .build();
 
       TypeSpec typeSpec = classBuilder(className)
