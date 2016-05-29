@@ -24,13 +24,11 @@ dependencies {
     compile 'com.squareup:javapoet:1.7.0'
     
     testCompile 'junit:junit:4.12'
-    
 }
 
 /*
- * ./gradlew publish
- * 
- * Publishing maven artifacts into the build folder instead of the local maven repository:
+ * Publish maven artifacts into the build folder: ./gradlew publish
+ 
  * https://docs.gradle.org/current/userguide/publishing_maven.html
  * (Chpaters '34.3. Repositories' and '34.4. Performing a publish')
  */
@@ -48,5 +46,5 @@ publishing {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.12'
+    gradleVersion = '2.13'
 }
