@@ -1,5 +1,6 @@
 package ch.cbossi.comeda;
 
+import static ch.cbossi.comeda.Strings.capitalize;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static com.squareup.javapoet.TypeSpec.classBuilder;
@@ -13,6 +14,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 import static javax.tools.Diagnostic.Kind.ERROR;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import javax.lang.model.element.VariableElement;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.JavaFile;
@@ -80,33 +83,41 @@ public class ComedaProcessor extends AbstractProcessor {
 
       List<MethodSpec> methods = new ArrayList<>();
       for (ExecutableElement requestMappingMethod : getRequestMappingMethods(controllerClass)) {
-        String methodName = requestMappingMethod.getSimpleName().toString() + URL;
+        String controllerMethodName = requestMappingMethod.getSimpleName().toString();
+        String basicMethodName = controllerMethodName + URL;
         RequestMapping requestMapping = requestMappingMethod.getAnnotation(RequestMapping.class);
         String url = getUrl(requestMapping);
 
-        MethodSpec.Builder methodBuilder = methodBuilder(methodName)
-            .addJavadoc(REQUEST_METHOD_JAVADOC, controllerClass, methodName)
-            .addModifiers(PUBLIC, STATIC)
-            .addStatement("$T url = $S", String.class, url);
+        RequestMethod[] requestMethods = requestMapping.method().length > 0 ? requestMapping.method() : new RequestMethod[] { GET };
+        for (RequestMethod requestMethod : requestMethods) {
+          String httpMethod = capitalize(requestMethod.name());
+          String methodName = basicMethodName + httpMethod;
 
-        List<ParameterSpec> arguments = new ArrayList<>();
-        for (VariableElement pathVariableArgument : getPathVariableArguments(requestMappingMethod)) {
-          PathVariable pathVariable = pathVariableArgument.getAnnotation(PathVariable.class);
-          TypeName typeName = TypeName.get(pathVariableArgument.asType());
-          String argumentName = pathVariableArgument.getSimpleName().toString();
-          String pathVariableName = !isNullOrEmpty(pathVariable.value()) ? pathVariable.value() : argumentName;
+          MethodSpec.Builder methodBuilder = methodBuilder(methodName)
+              .addJavadoc(REQUEST_METHOD_JAVADOC, controllerClass, controllerMethodName)
+              .addModifiers(PUBLIC, STATIC)
+              .addStatement("$T url = $S", String.class, url);
 
-          ParameterSpec parameterSpec = ParameterSpec.builder(typeName, argumentName, FINAL)
-              .build();
-          arguments.add(parameterSpec);
-          methodBuilder.addStatement("url = url.replaceFirst($S, valueOf($L))", "{" + pathVariableName + "}", argumentName);
+          List<ParameterSpec> arguments = new ArrayList<>();
+          for (VariableElement pathVariableArgument : getPathVariableArguments(requestMappingMethod)) {
+            PathVariable pathVariable = pathVariableArgument.getAnnotation(PathVariable.class);
+            TypeName typeName = TypeName.get(pathVariableArgument.asType());
+            String argumentName = pathVariableArgument.getSimpleName().toString();
+            String pathVariableName = !isNullOrEmpty(pathVariable.value()) ? pathVariable.value() : argumentName;
+
+            ParameterSpec parameterSpec = ParameterSpec.builder(typeName, argumentName, FINAL)
+                .build();
+            arguments.add(parameterSpec);
+            methodBuilder.addStatement("url = url.replaceFirst($S, valueOf($L))", "{" + pathVariableName + "}", argumentName);
+          }
+
+          methodBuilder
+              .addStatement("return url")
+              .addParameters(arguments)
+              .returns(TypeName.get(String.class));
+          methods.add(methodBuilder.build());
         }
 
-        methodBuilder
-            .addStatement("return url")
-            .addParameters(arguments)
-            .returns(TypeName.get(String.class));
-        methods.add(methodBuilder.build());
       }
 
       String className = controllerClass.getSimpleName() + URLS;
