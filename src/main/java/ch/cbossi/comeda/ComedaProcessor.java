@@ -82,13 +82,15 @@ public class ComedaProcessor extends AbstractProcessor {
   public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
     for (TypeElement controllerClass : getControllerClasses(roundEnv)) {
       boolean addStaticImport = false;
+      Controller controllerAnnotation = controllerClass.getAnnotation(Controller.class);
+      String baseUrl = controllerAnnotation.value();
 
       List<MethodSpec> methods = new ArrayList<>();
       for (ExecutableElement requestMappingMethod : getRequestMappingMethods(controllerClass)) {
         String controllerMethodName = requestMappingMethod.getSimpleName().toString();
         String basicMethodName = controllerMethodName + URL;
         RequestMapping requestMapping = requestMappingMethod.getAnnotation(RequestMapping.class);
-        String url = getUrl(requestMapping);
+        String url = getUrl(baseUrl, requestMapping);
 
         RequestMethod[] requestMethods = requestMapping.method().length > 0 ? requestMapping.method() : new RequestMethod[] { GET };
         for (RequestMethod requestMethod : requestMethods) {
@@ -154,10 +156,14 @@ public class ComedaProcessor extends AbstractProcessor {
     return false;
   }
 
-  private static String getUrl(final RequestMapping requestMapping) {
+  private static String getUrl(final String classUrl, final RequestMapping requestMapping) {
     String path = requestMapping.path().length > 0 ? requestMapping.path()[0] : EMPTY;
     String value = requestMapping.value().length > 0 ? requestMapping.value()[0] : EMPTY;
-    String url = !path.isEmpty() ? path : !value.isEmpty() ? value : EMPTY;
+    String methodUrl = !path.isEmpty() ? path : !value.isEmpty() ? value : EMPTY;
+    if (!classUrl.endsWith(URL_SEPARATOR) && !methodUrl.startsWith(URL_SEPARATOR)) {
+      methodUrl = URL_SEPARATOR + methodUrl;
+    }
+    String url = classUrl + methodUrl;
     return url.startsWith(URL_SEPARATOR) ? url : URL_SEPARATOR + url;
   }
 
