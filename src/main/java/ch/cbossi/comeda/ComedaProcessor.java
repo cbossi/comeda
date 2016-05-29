@@ -93,12 +93,13 @@ public class ComedaProcessor extends AbstractProcessor {
         for (VariableElement pathVariableArgument : getPathVariableArguments(requestMappingMethod)) {
           PathVariable pathVariable = pathVariableArgument.getAnnotation(PathVariable.class);
           TypeName typeName = TypeName.get(pathVariableArgument.asType());
-          String argumentName = !isNullOrEmpty(pathVariable.value()) ? pathVariable.value() : pathVariableArgument.getSimpleName().toString();
+          String argumentName = pathVariableArgument.getSimpleName().toString();
+          String pathVariableName = !isNullOrEmpty(pathVariable.value()) ? pathVariable.value() : argumentName;
 
           ParameterSpec parameterSpec = ParameterSpec.builder(typeName, argumentName, FINAL)
               .build();
           arguments.add(parameterSpec);
-          methodBuilder.addStatement("url = url.replaceFirst($S, valueOf($L))", "{" + argumentName + "}", argumentName);
+          methodBuilder.addStatement("url = url.replaceFirst($S, valueOf($L))", "{" + pathVariableName + "}", argumentName);
         }
 
         methodBuilder
