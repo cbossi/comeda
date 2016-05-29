@@ -81,6 +81,7 @@ public class ComedaProcessor extends AbstractProcessor {
   @Override
   public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
     for (TypeElement controllerClass : getControllerClasses(roundEnv)) {
+      boolean addStaticImport = false;
 
       List<MethodSpec> methods = new ArrayList<>();
       for (ExecutableElement requestMappingMethod : getRequestMappingMethods(controllerClass)) {
@@ -100,7 +101,11 @@ public class ComedaProcessor extends AbstractProcessor {
               .addStatement("$T url = $S", String.class, url);
 
           List<ParameterSpec> arguments = new ArrayList<>();
-          for (VariableElement pathVariableArgument : getPathVariableArguments(requestMappingMethod)) {
+          List<? extends VariableElement> pathVariableArguments = getPathVariableArguments(requestMappingMethod);
+          if (!pathVariableArguments.isEmpty()) {
+            addStaticImport = true;
+          }
+          for (VariableElement pathVariableArgument : pathVariableArguments) {
             PathVariable pathVariable = pathVariableArgument.getAnnotation(PathVariable.class);
             TypeName typeName = TypeName.get(pathVariableArgument.asType());
             String argumentName = pathVariableArgument.getSimpleName().toString();
@@ -135,9 +140,11 @@ public class ComedaProcessor extends AbstractProcessor {
           .build();
       String packageName = ((PackageElement) controllerClass.getEnclosingElement()).getQualifiedName().toString();
       try {
-        JavaFile.builder(packageName, typeSpec)
-            .addStaticImport(String.class, "valueOf")
-            .build()
+        JavaFile.Builder javaFileBuilder = JavaFile.builder(packageName, typeSpec);
+        if (addStaticImport) {
+          javaFileBuilder.addStaticImport(String.class, "valueOf");
+        }
+        javaFileBuilder.build()
             .writeTo(filer);
       }
       catch (IOException e) {
