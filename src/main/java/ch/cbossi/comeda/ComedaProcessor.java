@@ -7,6 +7,8 @@ import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static com.squareup.javapoet.TypeSpec.classBuilder;
 import static java.lang.String.format;
 import static java.util.Collections.singleton;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.ElementKind.METHOD;
@@ -20,6 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -82,8 +85,7 @@ public class ComedaProcessor extends AbstractProcessor {
   public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
     for (TypeElement controllerClass : getControllerClasses(roundEnv)) {
       boolean addStaticImport = false;
-      Controller controllerAnnotation = controllerClass.getAnnotation(Controller.class);
-      String baseUrl = controllerAnnotation.value();
+      Optional<String> baseUrl = ofNullable(controllerClass.getAnnotation(RequestMapping.class)).map(requestMapping -> getUrlFor(requestMapping));
 
       List<MethodSpec> methods = new ArrayList<>();
       for (ExecutableElement requestMappingMethod : getRequestMappingMethods(controllerClass)) {
@@ -156,15 +158,36 @@ public class ComedaProcessor extends AbstractProcessor {
     return false;
   }
 
-  private static String getUrl(final String classUrl, final RequestMapping requestMapping) {
-    String path = requestMapping.path().length > 0 ? requestMapping.path()[0] : EMPTY;
-    String value = requestMapping.value().length > 0 ? requestMapping.value()[0] : EMPTY;
-    String methodUrl = !path.isEmpty() ? path : !value.isEmpty() ? value : EMPTY;
-    if (!classUrl.endsWith(URL_SEPARATOR) && !methodUrl.startsWith(URL_SEPARATOR)) {
-      methodUrl = URL_SEPARATOR + methodUrl;
+  private static String getUrl(final Optional<String> classUrl, final RequestMapping requestMapping) {
+    String methodUrl = getUrlFor(requestMapping);
+    String url = methodUrl;
+    if (classUrl.isPresent()) {
+
+      if (!classUrl.get().endsWith(URL_SEPARATOR) && !methodUrl.startsWith(URL_SEPARATOR)) {
+        methodUrl = URL_SEPARATOR + methodUrl;
+      }
+      url = classUrl.get() + methodUrl;
     }
-    String url = classUrl + methodUrl;
     return url.startsWith(URL_SEPARATOR) ? url : URL_SEPARATOR + url;
+  }
+
+  // TODO rename
+  private static String getUrlFor(final RequestMapping requestMapping) {
+    return getPath(requestMapping).orElse(getValue(requestMapping).orElse(EMPTY));
+  }
+
+  /*
+   * If there are multiple paths for the same controller method, only the first one is considered.
+   */
+  private static Optional<String> getPath(final RequestMapping requestMapping) {
+    return requestMapping.path().length > 0 ? Optional.of(requestMapping.path()[0]) : empty();
+  }
+
+  /*
+   * If there are multiple values for the same controller method, only the first one is considered.
+   */
+  private static Optional<String> getValue(final RequestMapping requestMapping) {
+    return requestMapping.value().length > 0 ? Optional.of(requestMapping.value()[0]) : empty();
   }
 
   private static List<TypeElement> getControllerClasses(final RoundEnvironment roundEnv) {
