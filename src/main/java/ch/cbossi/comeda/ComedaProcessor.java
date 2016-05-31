@@ -118,7 +118,7 @@ public class ComedaProcessor extends AbstractProcessor {
             ParameterSpec parameterSpec = ParameterSpec.builder(typeName, argumentName, FINAL)
                 .build();
             arguments.add(parameterSpec);
-            methodBuilder.addStatement("url = url.replaceFirst($S, valueOf($L))", "{" + pathVariableName + "}", argumentName);
+            methodBuilder.addStatement("url = url.replaceFirst($S, valueOf($L))", "\\{" + pathVariableName + "\\}", argumentName);
           }
 
           methodBuilder
