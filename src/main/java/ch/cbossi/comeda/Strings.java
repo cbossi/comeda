@@ -14,6 +14,6 @@ public final class Strings {
     else if (word.length() == 1) {
       return word.toUpperCase();
     }
-    return toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase();
+    return toUpperCase(word.charAt(0)) + word.substring(1);
   }
 }

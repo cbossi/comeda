@@ -54,7 +54,7 @@ public class ComedaProcessor extends AbstractProcessor {
 
   private static final String ERROR_CREATING_URL_CLASS = "Comeda annotation processor: Error reating URLs for '%s'.";
   private static final String URLS = "Urls";
-  private static final String URL = "Url";
+  private static final String HTTP = "http";
   private static final String URL_SEPARATOR = "/";
   private static final String EMPTY = "";
 
@@ -90,14 +90,13 @@ public class ComedaProcessor extends AbstractProcessor {
       List<MethodSpec> methods = new ArrayList<>();
       for (ExecutableElement requestMappingMethod : getRequestMappingMethods(controllerClass)) {
         String controllerMethodName = requestMappingMethod.getSimpleName().toString();
-        String basicMethodName = controllerMethodName + URL;
         RequestMapping requestMapping = requestMappingMethod.getAnnotation(RequestMapping.class);
         String url = getUrl(baseUrl, requestMapping);
 
         RequestMethod[] requestMethods = requestMapping.method().length > 0 ? requestMapping.method() : new RequestMethod[] { GET };
         for (RequestMethod requestMethod : requestMethods) {
-          String httpMethod = capitalize(requestMethod.name());
-          String methodName = basicMethodName + httpMethod;
+          String httpMethod = capitalize(requestMethod.name().toLowerCase());
+          String methodName = HTTP + httpMethod + capitalize(controllerMethodName);
 
           MethodSpec.Builder methodBuilder = methodBuilder(methodName)
               .addJavadoc(REQUEST_METHOD_JAVADOC, controllerClass, controllerMethodName)
