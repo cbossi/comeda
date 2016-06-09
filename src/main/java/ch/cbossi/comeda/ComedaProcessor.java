@@ -1,9 +1,10 @@
 package ch.cbossi.comeda;
 
 import static ch.cbossi.comeda.ElementFilters.isElementKind;
+import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.String.format;
-import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.tools.Diagnostic.Kind.ERROR;
 
@@ -21,6 +22,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.google.auto.service.AutoService;
 
@@ -43,7 +45,7 @@ public class ComedaProcessor extends AbstractProcessor {
 
   @Override
   public Set<String> getSupportedAnnotationTypes() {
-    return singleton(Controller.class.getName());
+    return newHashSet(Controller.class.getName(), RestController.class.getName());
   }
 
   @Override
@@ -65,7 +67,7 @@ public class ComedaProcessor extends AbstractProcessor {
   }
 
   private static List<ControllerClass> getControllerClasses(final RoundEnvironment roundEnv) {
-    return roundEnv.getElementsAnnotatedWith(Controller.class).stream()
+    return concat(roundEnv.getElementsAnnotatedWith(Controller.class).stream(), roundEnv.getElementsAnnotatedWith(RestController.class).stream())
         .filter(isElementKind(CLASS))
         .map(element -> new ControllerClass((TypeElement) element))
         .collect(toList());
