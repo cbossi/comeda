@@ -1,4 +1,4 @@
-package ch.cbossi.comeda;
+package ch.cbossi.comeda.generator;
 
 import static java.util.Optional.empty;
 

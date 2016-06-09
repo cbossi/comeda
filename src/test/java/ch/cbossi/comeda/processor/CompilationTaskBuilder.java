@@ -1,4 +1,4 @@
-package ch.cbossi.comeda;
+package ch.cbossi.comeda.processor;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;

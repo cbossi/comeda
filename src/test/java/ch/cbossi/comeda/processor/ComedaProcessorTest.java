@@ -1,6 +1,6 @@
-package ch.cbossi.comeda;
+package ch.cbossi.comeda.processor;
 
-import static ch.cbossi.comeda.CompilationTaskBuilder.compilationTask;
+import static ch.cbossi.comeda.processor.CompilationTaskBuilder.compilationTask;
 
 import java.io.File;
 

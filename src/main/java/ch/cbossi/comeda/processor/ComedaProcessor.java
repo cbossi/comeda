@@ -1,6 +1,6 @@
-package ch.cbossi.comeda;
+package ch.cbossi.comeda.processor;
 
-import static ch.cbossi.comeda.ElementFilters.isElementKind;
+import static ch.cbossi.comeda.util.ElementFilters.isElementKind;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
@@ -25,6 +25,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.auto.service.AutoService;
+
+import ch.cbossi.comeda.generator.ComedaGenerator;
+import ch.cbossi.comeda.generator.ControllerClass;
 
 @AutoService(Processor.class)
 public class ComedaProcessor extends AbstractProcessor {

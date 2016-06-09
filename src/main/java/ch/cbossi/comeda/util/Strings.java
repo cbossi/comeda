@@ -1,4 +1,4 @@
-package ch.cbossi.comeda;
+package ch.cbossi.comeda.util;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.Character.toUpperCase;

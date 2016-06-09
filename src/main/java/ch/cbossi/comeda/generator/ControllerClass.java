@@ -1,8 +1,8 @@
-package ch.cbossi.comeda;
+package ch.cbossi.comeda.generator;
 
-import static ch.cbossi.comeda.ElementFilters.hasAnnotation;
-import static ch.cbossi.comeda.ElementFilters.isElementKind;
-import static ch.cbossi.comeda.RequestMappingDecorator.decorate;
+import static ch.cbossi.comeda.generator.RequestMappingDecorator.decorate;
+import static ch.cbossi.comeda.util.ElementFilters.hasAnnotation;
+import static ch.cbossi.comeda.util.ElementFilters.isElementKind;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static javax.lang.model.element.ElementKind.METHOD;

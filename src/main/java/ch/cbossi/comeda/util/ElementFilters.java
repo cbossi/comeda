@@ -1,4 +1,4 @@
-package ch.cbossi.comeda;
+package ch.cbossi.comeda.util;
 
 import java.lang.annotation.Annotation;
 import java.util.function.Predicate;
@@ -10,11 +10,11 @@ public final class ElementFilters {
 
   private ElementFilters() {}
 
-  static Predicate<Element> isElementKind(final ElementKind kind) {
+  public static Predicate<Element> isElementKind(final ElementKind kind) {
     return element -> element.getKind().equals(kind);
   }
 
-  static Predicate<Element> hasAnnotation(final Class<? extends Annotation> annotationType) {
+  public static Predicate<Element> hasAnnotation(final Class<? extends Annotation> annotationType) {
     return element -> element.getAnnotation(annotationType) != null;
   }
 }
