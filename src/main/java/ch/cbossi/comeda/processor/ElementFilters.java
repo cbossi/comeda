@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 
-public final class ElementFilters {
+final class ElementFilters {
 
   private ElementFilters() {}
 

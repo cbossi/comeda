@@ -11,7 +11,7 @@ import com.squareup.javapoet.TypeName;
 /**
  * Wrapper for a method argument annotated with {@link PathVariable}.
  */
-public class PathVariableArgument {
+class PathVariableArgument {
 
   private final VariableElement pathVariableArgument;
 

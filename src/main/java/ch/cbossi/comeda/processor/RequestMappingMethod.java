@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * Wrapper for a method annotated with {@link RequestMapping}.
  */
-public class RequestMappingMethod {
+class RequestMappingMethod {
 
   private static final RequestMethod[] DEFAULT_HTTP_METHODS = new RequestMethod[] { GET };
 

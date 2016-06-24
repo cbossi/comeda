@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-public class RequestMappingDecorator {
+class RequestMappingDecorator {
 
   private static final String EMPTY = "";
 

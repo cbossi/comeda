@@ -19,7 +19,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import ch.cbossi.comeda.url.Url;
 
-public class ComedaGenerator {
+class ComedaGenerator {
 
   private static final String URLS = "Urls";
   private static final String HTTP = "http";

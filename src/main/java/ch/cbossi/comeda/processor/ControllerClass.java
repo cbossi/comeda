@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * Wrapper for controller classes.
  */
-public class ControllerClass {
+class ControllerClass {
 
   private static final String EMPTY = "";
 
