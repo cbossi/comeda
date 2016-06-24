@@ -1,4 +1,4 @@
-package ch.cbossi.comeda.generator;
+package ch.cbossi.comeda.processor;
 
 final class Urls {
 

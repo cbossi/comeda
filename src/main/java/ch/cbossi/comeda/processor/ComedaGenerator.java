@@ -1,8 +1,8 @@
-package ch.cbossi.comeda.generator;
+package ch.cbossi.comeda.processor;
 
-import static ch.cbossi.comeda.generator.Strings.capitalize;
-import static ch.cbossi.comeda.generator.Urls.absolute;
-import static ch.cbossi.comeda.generator.Urls.concatenate;
+import static ch.cbossi.comeda.processor.Strings.capitalize;
+import static ch.cbossi.comeda.processor.Urls.absolute;
+import static ch.cbossi.comeda.processor.Urls.concatenate;
 import static com.squareup.javapoet.MethodSpec.constructorBuilder;
 import static com.squareup.javapoet.MethodSpec.methodBuilder;
 import static com.squareup.javapoet.TypeSpec.classBuilder;
