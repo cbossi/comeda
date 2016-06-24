@@ -1,9 +1,9 @@
-package ch.cbossi.comeda.util;
+package ch.cbossi.comeda.generator;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.Character.toUpperCase;
 
-public final class Strings {
+final class Strings {
 
   private Strings() {}
 

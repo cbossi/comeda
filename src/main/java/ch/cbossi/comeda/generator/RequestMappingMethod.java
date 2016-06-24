@@ -1,8 +1,8 @@
 package ch.cbossi.comeda.generator;
 
+import static ch.cbossi.comeda.generator.ElementFilters.hasAnnotation;
 import static ch.cbossi.comeda.generator.RequestMappingDecorator.decorate;
-import static ch.cbossi.comeda.util.ElementFilters.hasAnnotation;
-import static ch.cbossi.comeda.util.Strings.capitalize;
+import static ch.cbossi.comeda.generator.Strings.capitalize;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;

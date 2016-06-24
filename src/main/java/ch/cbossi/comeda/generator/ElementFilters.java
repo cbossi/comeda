@@ -1,4 +1,4 @@
-package ch.cbossi.comeda.util;
+package ch.cbossi.comeda.generator;
 
 import java.lang.annotation.Annotation;
 import java.util.function.Predicate;

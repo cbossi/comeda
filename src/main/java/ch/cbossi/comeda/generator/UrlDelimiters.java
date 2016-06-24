@@ -1,6 +1,6 @@
-package ch.cbossi.comeda.util;
+package ch.cbossi.comeda.generator;
 
-public final class UrlDelimiters {
+final class UrlDelimiters {
 
   private static final String URL_DELIMITER = "/";
 

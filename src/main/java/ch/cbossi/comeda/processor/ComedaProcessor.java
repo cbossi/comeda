@@ -1,6 +1,6 @@
 package ch.cbossi.comeda.processor;
 
-import static ch.cbossi.comeda.util.ElementFilters.isElementKind;
+import static ch.cbossi.comeda.generator.ElementFilters.isElementKind;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
