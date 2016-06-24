@@ -1,10 +1,10 @@
 package ch.cbossi.comeda.generator;
 
-final class UrlDelimiters {
+final class Urls {
 
   private static final String URL_DELIMITER = "/";
 
-  private UrlDelimiters() {}
+  private Urls() {}
 
   public static String concatenate(final String leftUrl, final String rightUrl) {
     if (leftUrl.endsWith(URL_DELIMITER) && rightUrl.startsWith(URL_DELIMITER)) {

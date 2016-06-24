@@ -87,4 +87,13 @@ public class UrlTest {
     assertThat(actualUrl).isEqualTo("base?key1=value1");
   }
 
+  @Test
+  public void testRedirectTo() {
+    Url url = new Url("test");
+
+    String redirectUrl = Url.redirectTo(url);
+
+    assertThat(redirectUrl).isEqualTo("redirect:test");
+  }
+
 }

@@ -14,6 +14,8 @@ import com.google.common.base.Joiner;
 
 public class Url {
 
+  private static final String REDIRECT_PREFIX = "redirect:";
+
   private final String url;
   private final Map<String, String> requestParameters;
 
@@ -77,5 +79,9 @@ public class Url {
 
   private static final String withoutTrailingSlash(final String url) {
     return url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
+  }
+
+  public static String redirectTo(final Url url) {
+    return REDIRECT_PREFIX + url;
   }
 }
